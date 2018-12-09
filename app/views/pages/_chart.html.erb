@@ -1,0 +1,91 @@
+<script>
+$(function () {
+    var title = "";
+    var legend = "";
+    var currency = "";
+
+    var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'container'
+        },
+
+        legend: {
+        enabled: false
+        },
+
+        title: {
+            text: 'Cotação em Reais (USD,EUR,ARS)'
+        },
+
+        subtitle: {
+            text: 'Período de 7 Dias'
+        },
+
+        xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: {
+            day: '%e of %b'
+        }
+        },
+
+        yAxis: {
+          labels: {
+            format: '{value:.2f}'
+        },
+        title: {
+            text: 'R$'
+        }
+        },
+
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: false,
+                    format: '{y:.2f}'
+                }
+            }
+        },
+
+        series: [{
+            showInLegend: false,
+            pointStart: Date.UTC(<%= @days.first.year %>, <%= @days.first.month - 1 %>, <%= @days.first.day %>),
+            pointInterval: 24 * 3600 * 1000
+        }]
+    });
+
+    $('#button_usd').click(function() {
+        currency = "usd"
+        chart.series[0].setData(<%= @usd %>);
+        setChartData(currency);
+    });
+
+    $('#button_eur').click(function() {
+        currency = "eur"
+        chart.series[0].setData(<%= @eur %>);
+        setChartData(currency);
+    });
+
+    $('#button_ars').click(function() {
+        currency = "ars"
+        chart.series[0].setData(<%= @ars %>);
+        setChartData(currency);
+    });
+
+    function setChartData(currency) {
+
+      if (currency === "usd") {
+        title = 'Conversão Dolar para Real';
+        legend = 'USD';
+      } else if (currency === "eur") {
+        title = 'Conversão Euro para Real';
+        legend = 'USD';
+      } else {
+        title = 'Conversão Peso para Real';
+        legend = 'USD';
+      }
+      chart.setTitle({ text: `${title}` });
+      chart.legend.allItems[0].update({name:`${currency}`});
+    }
+
+});
+</script>
