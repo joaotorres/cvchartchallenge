@@ -22,16 +22,16 @@ class PagesController < ApplicationController
   end
 
   def set_period
-    @today = Date.today
-    @last_day = @today - 6
+    today = Date.today
+    last_day = today - 6
     @period = []
 
-    until @last_day == @today
-      @period << @last_day
-      @last_day += 1
+    until last_day == today
+      @period << last_day
+      last_day += 1
     end
 
-    @period << @today
+    @period << today
   end
 
   def parse
@@ -49,9 +49,10 @@ class PagesController < ApplicationController
           "&format=1"
         )
         data = stream.read
-        @rate = JSON.parse(data)
-        create_rate(@rate)
+        rate = JSON.parse(data)
+        create_rate(rate)
       end
+
     end
 
   end
