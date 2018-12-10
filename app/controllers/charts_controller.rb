@@ -1,51 +1,25 @@
 class ChartsController < ApplicationController
   require 'open-uri'
-  before_action :parse, only: [:home]
+  PREVIOUS_DAYS = 6
 
-
-  def home
-    @days = Rate.pluck(:date)
-    @usd = currency_conversion(Rate.pluck(:usd))
-    @eur = currency_conversion(Rate.pluck(:eur))
-    @ars = currency_conversion(Rate.pluck(:ars))
+  def index
+    parse
+    @first_day = Time.zone.today - PREVIOUS_DAYS
+    rates = Rate.where('date >= ?', Date.today - 6).order(:date)
+    @usd_rates = currency_conversion(rates.pluck(:usd))
+    @eur_rates = currency_conversion(rates.pluck(:eur))
+    @ars_rates = currency_conversion(rates.pluck(:ars))
   end
 
   private
 
-  def currency_conversion(currency)
-    currency.map { |quote| (1 / quote).round(2) }
-  end
-
-  def set_date_str(date)
-    @day = date.strftime("%d")
-    @month = date.strftime("%m")
-    @year = date.strftime("%Y")
-  end
-
-  def set_period
-    today = Date.today
-    last_day = today - 6
-    @period = []
-
-    until last_day == today
-      @period << last_day
-      last_day += 1
-    end
-
-    @period << today
-  end
-
   def parse
-
-    set_period
-
-    @period.each do |date|
-      if !Rate.find_by(date: date)
-        set_date_str(date)
+    date_range.each do |date|
+      unless Rate.find_by(date: date)
         stream = open(
           "http://apilayer.net/api/historical"+
           "?access_key=66be6bb04f96fdcd9f881be872d752f1"+
-          "&date=#{@year}-#{@month}-#{@day}"+
+          "&date=#{date.strftime("%Y-%m-%d")}"+
           "&currencies=BRL,USD,EUR,ARS"+
           "&format=1"
         )
@@ -53,9 +27,13 @@ class ChartsController < ApplicationController
         rate = JSON.parse(data)
         create_rate(rate)
       end
-
     end
+  end
 
+  def date_range
+    today = Time.zone.today
+    last_day = today - PREVIOUS_DAYS
+    (last_day..today)
   end
 
   def create_rate(rate)
@@ -66,5 +44,10 @@ class ChartsController < ApplicationController
                   ars: (1 / (quote["USDBRL"] /quote["USDARS"]))
                   )
   end
+
+  def currency_conversion(currency)
+    currency.map { |quote| (1 / quote).round(2) }
+  end
+
 end
 

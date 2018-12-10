@@ -48,26 +48,26 @@ $(function () {
 
         series: [{
             showInLegend: false,
-            pointStart: Date.UTC(<%= @days.first.year %>, <%= @days.first.month - 1 %>, <%= @days.first.day %>),
+            pointStart: Date.UTC(<%= @first_day.year %>, <%= @first_day.month - 1 %>, <%= @first_day.day %>),
             pointInterval: 24 * 3600 * 1000
         }]
     });
 
     $('#button_usd').click(function() {
         currency = "usd"
-        chart.series[0].setData(<%= @usd %>);
+        chart.series[0].setData(<%= @usd_rates %>);
         setChartData(currency);
     });
 
     $('#button_eur').click(function() {
         currency = "eur"
-        chart.series[0].setData(<%= @eur %>);
+        chart.series[0].setData(<%= @eur_rates %>);
         setChartData(currency);
     });
 
     $('#button_ars').click(function() {
         currency = "ars"
-        chart.series[0].setData(<%= @ars %>);
+        chart.series[0].setData(<%= @ars_rates %>);
         setChartData(currency);
     });
 
