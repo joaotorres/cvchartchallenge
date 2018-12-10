@@ -1,4 +1,4 @@
-class PagesController < ApplicationController
+class ChartsController < ApplicationController
   require 'open-uri'
   before_action :parse, only: [:home]
 
