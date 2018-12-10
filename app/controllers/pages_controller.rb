@@ -2,6 +2,7 @@ class PagesController < ApplicationController
   require 'open-uri'
   before_action :parse, only: [:home]
 
+
   def home
     @days = Rate.pluck(:date)
     @usd = currency_conversion(Rate.pluck(:usd))
