@@ -3,7 +3,7 @@ class ChartsController < ApplicationController
   PREVIOUS_DAYS = 6
 
   def index
-    parse
+    get_quotes_api
     @first_day = Time.zone.today - PREVIOUS_DAYS
     rates = Rate.where('date >= ?', Date.today - 6).order(:date)
     @usd_rates = currency_conversion(rates.pluck(:usd))
@@ -13,7 +13,7 @@ class ChartsController < ApplicationController
 
   private
 
-  def parse
+  def get_quotes_api
     date_range.each do |date|
       unless Rate.find_by(date: date)
         stream = open(
