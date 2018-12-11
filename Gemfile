@@ -30,4 +30,5 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'rspec-rails', '~> 3.6'
   gem 'capybara'
+  gem 'spring-commands-rspec'
 end
