@@ -18,7 +18,7 @@ class ChartsController < ApplicationController
       unless Rate.find_by(date: date)
         stream = open(
           "http://apilayer.net/api/historical"+
-          "?access_key=66be6bb04f96fdcd9f881be872d752f1"+
+          "?access_key=b44bc68da3216f7483647c0e507d09aa"+
           "&date=#{date.strftime("%Y-%m-%d")}"+
           "&currencies=BRL,USD,EUR,ARS"+
           "&format=1"
