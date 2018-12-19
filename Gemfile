@@ -32,3 +32,7 @@ group :development, :test do
   gem 'capybara'
   gem 'spring-commands-rspec'
 end
+
+group :test do
+  gem 'simplecov', require: false
+end
